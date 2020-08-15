@@ -1,0 +1,19 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+<div class="container-sm" style="display: flex;">
+    {% for category in categories %}
+    <a href="{% url 'category_view' category.id %}" style="text-decoration: none;">
+    <div class="card text-white bg-dark mb-3" style="max-width: 18rem; margin: 10px;">
+        <div class="card-header">{{category.category_title}}</div>
+        <div class="card-body">
+          <!-- <h5 class="card-title">Info card title</h5> -->
+          <p class="card-text">{{category.category_description}}</p>
+        </div>
+      </div>
+    </a>
+    {% endfor %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+
+<div class="container-sm">
+    <h1>
+        My Watch lists
+    </h1>
+
+    {% for watchitem in watchlists %}
+    <a href="{% url 'listing_page' watchitem.watchlist_listing.id %}" style="text-decoration: none; color: inherit;">
+    <div class="card" style="margin: 10px;">
+        <div class="card-header">
+            {{watchitem.watchlist_listing.listing_title}}
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">${{watchitem.watchlist_listing.listing_price}}.00</h5>
+          <p class="card-text">{{watchitem.watchlist_listing.listing_description}}</p>
+          <a href="{% url 'del_watchlist' watchitem.id request.user.id %}" class="btn btn-primary">Remove</a>
+        </div>
+      </div>
+    </a>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,100 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<div class="container-sm">
+    <div>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+          <h4 class="nav-brand">Listing for {{listing.listing_title}}</h4>
+        
+          <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            </ul>
+            {% if listing.listing_owner == request.user %}
+            <a href="{% url 'close_biding' listing.id %}" class="btn btn-danger my-2 my-sm-0">Close listing</a>
+            {% endif %}
+          </div>
+        </nav>
+    </div>
+   
+    <hr>
+      <div>
+        {% if bid_winner == request.user %}
+          <div class="alert alert-success" role="alert">
+            You are the winner 
+          </div>
+        {% elif bid_winner == "No bids" %}
+          <div class="alert alert-success" role="alert">
+            Bid has been closed with 0 bids
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="row row-cols-1 row-cols-md-2">
+        <div class="col mb-4">
+          <div class="card">
+            <img src="{{listing.listing_picture}}" class="card-img-top" alt="...">
+            <div class="card-body">
+              <h5 class="card-title">{{listing.listing_title}}</h5>
+              {% if last_bid > listing.listing_price %}
+              <h6 class="card-title">Current bid: ${{last_bid}}.00</h6>
+              {% else %}
+              <h6 class="card-title">Current bid: ${{listing.listing_price}}.00</h6>
+              {% endif %}
+              <p class="card-text">Desc: {{listing.listing_description}}</p>
+              <p class="card-text">Seller: {{listing.listing_owner}}</p>
+              <p class="card-text">Date created: {{listing.listing_creation_date}}</p>
+            </div>
+            <hr>
+
+            {% if listing.listing_bid_is_active %}
+            <form class="card-body" action="{% url 'bid_view' request.user.id listing.id  %}" method="POST">
+              {% csrf_token %}
+                <div class="form-row align-items-center">
+                  <div class="col-auto">
+                    <label class="sr-only" for="inlineFormInput">Bid</label>
+                    <input type="text" class="form-control mb-2" id="inlineFormInput" placeholder="Bid" name="bidding_price">
+                  </div>
+                  <div class="col-auto" style="margin-left: 5px;">
+                    <button type="submit" class="btn btn-success mb-2">Bid now</button>
+                    <a  href="{% url 'add_watchlist' request.user.id listing.id %}" style="margin-left: 5px;"><button type="button" class="btn btn-primary mb-2"> Add to watchlist </button></a>  
+                  </div>
+                </div>
+            </form>
+            {% else %}
+            <div class="alert alert-danger" role="alert" style="margin: 10px;">
+              Bidding is closed
+            </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="col mb-4">
+            <div class="card">
+              <div class="card-body">
+                <hr>
+                <div>
+                    <form action="{% url 'add_comment' listing.id %}" method="GET">
+                        <div class="form-group">
+                          <label for="exampleInputEmail1">Add a comment</label>
+                          <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="comment">
+                        </div>
+                        <button type="submit" class="form-control btn btn-primary">Submit</button>
+                      </form>
+                </div>
+                <hr>
+                <div>
+                    <h5 class="card-title">All comments</h5>
+                    <ul>
+                        {% for comment in comments %}
+                        <li class="card-text">{{comment.comment_text}}</li>
+                        {% empty %}
+                        <li class="card-text">No comments</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <div class="container-sm">
+        <h1>
+           Add New listing
+        </h1>
+        <form action="{% url 'create_listing' %}" method="POST">
+            {% csrf_token %}
+            <div class="form-row">
+                <div>
+                    <input type="hidden" class="form-control" value="{{ request.user.id }}" name="listing_owner">
+                </div>
+              <div class="form-group col-md-6">
+                <label for="inputEmail4">Title</label>
+                <input type="text" class="form-control" id="inputEmail4" name="listing_title">
+              </div>
+              <div class="form-group col-md-6">
+                <label for="inputPassword4">Starting price</label>
+                <input type="text" class="form-control" id="inputPassword4" name="listing_starting_price">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputAddress">Description</label>
+              <input type="text-area" class="form-control" id="inputAddress" placeholder="This is a sample description" name="listing_description">
+            </div>
+            <div class="form-group">
+                <label for="inputAddress">Add a picture</label>
+                <div class="custom-file ">
+                    <input type="text-area" class="form-control" id="inputGroupFile02" name="listing_picture">
+                  </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-4">
+                <label for="inputState">Category</label>
+                <select id="inputState" class="form-control" name="listing_category">
+                  <option selected>Choose...</option>
+                  {% for category in categories %}
+                  <option value="{{ category.id }}">{{category.category_title}}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="form-group col-md-2">
+                <label for="inputZip">Submit</label>
+                <button type="submit" class=" form-control btn btn-primary">Submit</button>
+              </div>
+            </div>
+          </form>
+    </div>
+{% endblock %}
